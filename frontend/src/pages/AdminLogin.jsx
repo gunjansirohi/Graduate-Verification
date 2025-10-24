@@ -1,4 +1,3 @@
-import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaMicrosoft, FaTwitter } from "react-icons/fa";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,7 @@ import { motion } from "framer-motion";
 axios.defaults.withCredentials = true;
 
 const MAX_ATTEMPTS = 5;
-const authurl = import.meta.env.VITE_ADMIN_ROUTE
+const authurl = import.meta.env.VITE_ADMIN_ROUTE;
 const AdminLogin = () => {
   const [adminCredentials, setAdminCredentials] = useState({
     email: "",
@@ -35,25 +34,22 @@ const AdminLogin = () => {
   const handleAdminLogin = async (e) => {
     e.preventDefault();
     if (isLocked) return;
-    
+
     setIsLoading(true);
     setErrorMessage(""); // Clear previous error message
-    
+
     try {
-      const response = await axios.post(
-        `${authurl}/login`,
-        adminCredentials
-      );
+      const response = await axios.post(`${authurl}/login`, adminCredentials);
       localStorage.setItem("adminToken", response.data.token);
-      
+
       await Swal.fire({
         title: "Success",
         text: "🎉 Admin Login Successful!",
         icon: "success",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
-      
+
       // Reset attempts on successful login
       setAttempts(0);
       setRemainingAttempts(MAX_ATTEMPTS);
@@ -63,7 +59,7 @@ const AdminLogin = () => {
         error.response?.data?.error ||
         error.response?.data?.message ||
         "Invalid credentials";
-      
+
       // Set error message to display below form
       setErrorMessage(backendMsg);
 
@@ -167,7 +163,7 @@ const AdminLogin = () => {
 
             <motion.form
               variants={containerVariants}
-              className="space-y-4"  // Reduced space to accommodate error message
+              className="space-y-4" // Reduced space to accommodate error message
               onSubmit={handleAdminLogin}
             >
               <motion.div variants={itemVariants}>
@@ -252,14 +248,30 @@ const AdminLogin = () => {
                   type="submit"
                   disabled={isLocked || isLoading}
                   className={`w-full py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ${
-                    (isLocked || isLoading) ? "opacity-60 cursor-not-allowed" : ""
+                    isLocked || isLoading ? "opacity-60 cursor-not-allowed" : ""
                   }`}
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center ">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Processing...
                     </span>
@@ -297,16 +309,6 @@ const AdminLogin = () => {
               variants={containerVariants}
               className="grid grid-cols-2 gap-3"
             >
-              <motion.button
-                variants={itemVariants}
-                type="button"
-                disabled
-                className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-600 transition duration-200 cursor-pointer disabled:opacity-50"
-              >
-                <FcGoogle className="text-lg" />
-                <span>Google</span>
-              </motion.button>
-
               <motion.button
                 variants={itemVariants}
                 type="button"

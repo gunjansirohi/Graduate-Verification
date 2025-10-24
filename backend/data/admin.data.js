@@ -10,19 +10,6 @@ const createAdmin = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     
-  // const existingAdmin = await Admin.findOne({ email: "madishamadiso00@gmail.com" });
-  //   if (!existingAdmin) {
-  //     const hashedPassword = await bcrypt.hash("1234", 10);
-  //     const newAdmin = new Admin({
-  //       email: "madishamadiso00@gmail.com",
-  //       password: hashedPassword,
-  //     });
-  //     await newAdmin.save();
-  //     console.log("Admin account created.");
-  //   } else {
-  //     console.log("Admin already exists.");
-  //   }
-    // ////this one for testing purposes only
     const certificate = await Certificate.deleteMany({});
     if (certificate.deletedCount > 0) {
       console.log("All certificates deleted.");

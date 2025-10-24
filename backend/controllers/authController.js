@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const { sendVerificationEmail, sendPasswordResetEmail } = require("../utils/email");
+const { sendPasswordResetEmail } = require("../utils/email");
 const { generateToken } = require("../utils/jwt");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -45,14 +45,11 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Generate verification code
-    const verificationCode = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
-
     // Validate role (only admin can create other admins/registrars)
     if (role && role !== "user" && req.user?.role !== "admin") {
-      return res.status(403).json({ error: "Not authorized to create this role" });
+      return res
+        .status(403)
+        .json({ error: "Not authorized to create this role" });
     }
 
     // Create new user
@@ -65,18 +62,14 @@ exports.register = async (req, res) => {
       phone,
       email,
       password,
-      verificationCode,
       role: role || "user", // Default to 'user' if no role is provided
     });
 
     await newUser.save();
 
-    // Send verification email
-    await sendVerificationEmail(email, verificationCode);
-
     res.status(201).json({
       success: true,
-      message: "Registration successful. Please check your email for verification.",
+      message: "Registration successful.",
     });
   } catch (error) {
     console.error("Registration error:", error);
@@ -96,63 +89,37 @@ const validatePasswordStrength = (password) => {
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
   if (password.length < minLength) {
-    return { isValid: false, message: "Password must be at least 8 characters long." };
+    return {
+      isValid: false,
+      message: "Password must be at least 8 characters long.",
+    };
   }
   if (!hasUppercase) {
-    return { isValid: false, message: "Password must include at least one uppercase letter." };
+    return {
+      isValid: false,
+      message: "Password must include at least one uppercase letter.",
+    };
   }
   if (!hasLowercase) {
-    return { isValid: false, message: "Password must include at least one lowercase letter." };
+    return {
+      isValid: false,
+      message: "Password must include at least one lowercase letter.",
+    };
   }
   if (!hasNumber) {
-    return { isValid: false, message: "Password must include at least one number." };
+    return {
+      isValid: false,
+      message: "Password must include at least one number.",
+    };
   }
   if (!hasSpecialChar) {
-    return { isValid: false, message: "Password must include at least one special character." };
+    return {
+      isValid: false,
+      message: "Password must include at least one special character.",
+    };
   }
 
   return { isValid: true, message: "Password is strong." };
-};
-
-exports.verifyEmail = async (req, res) => {
-  try {
-    const { email, code } = req.body;
-
-    const user = await User.findOne({ email, verificationCode: code });
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        error: "Invalid verification code",
-      });
-    }
-
-    user.isVerified = true;
-    user.verificationCode = undefined;
-    await user.save();
-
-    // Generate JWT token
-    const token = generateToken(user._id);
-
-    res.json({
-      success: true,
-      token,
-      user: {
-        id: user._id,
-        nationalIdNumber: user.nationalIdNumber,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-      },
-    });
-  } catch (error) {
-    console.error("Email verification error:", error);
-    res.status(500).json({
-      success: false,
-      error: "Email verification failed",
-    });
-  }
 };
 
 const validateCaptcha = async (token) => {
@@ -165,7 +132,7 @@ const validateCaptcha = async (token) => {
 // Login with email or national ID
 exports.login = async (req, res) => {
   try {
-    const { email, nationalIdNumber, password, captchaToken  } = req.body;
+    const { email, nationalIdNumber, password, captchaToken } = req.body;
     const identifier = email || nationalIdNumber;
 
     if (!identifier) {
@@ -174,13 +141,13 @@ exports.login = async (req, res) => {
         error: "Email/Nationa ID is required",
       });
     }
-        if(!captchaToken){
+    if (!captchaToken) {
       return res.status(400).json({
         success: false,
         error: "please, idenitify your self you're not robot   it's required",
-      })
+      });
     }
-    
+
     if (!password) {
       return res.status(400).json({
         success: false,
@@ -193,7 +160,7 @@ exports.login = async (req, res) => {
         error: "Password must be at least 8 characters long",
       });
     }
-     const isHuman = await validateCaptcha(captchaToken);
+    const isHuman = await validateCaptcha(captchaToken);
     if (!isHuman) {
       return res.status(403).json({ message: "CAPTCHA validation failed" });
     }
@@ -216,23 +183,6 @@ exports.login = async (req, res) => {
       return res.status(401).json({
         success: false,
         error: "Incorrect password, please try again or reset your password",
-      });
-    }
-
-    // Check if email is verified
-    if (!user.isVerified) {
-      // Send verification email if not verified
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
-      user.verificationCode = code;
-      user.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-      await user.save();
-
-      await sendVerificationEmail(user.email, code);
-
-      return res.json({
-        success: true,
-        requiresVerification: true,
-        message: "Email verification required. Code sent to your email.",
       });
     }
 
@@ -262,43 +212,6 @@ exports.login = async (req, res) => {
     });
   }
 };
-
-// Google OAuth login
-exports.googleOAuthCallback = async (req, res) => {
-  try {
-    // Passport attaches user object to req.user after successful authentication
-    const user = req.user;
-
-    if (!user) {
-      return res.status(401).json({ success: false, error: "User not authenticated" });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    // Respond with token and user info
-    // res.json({
-    //   success: true,
-    //   token,
-    //   user: {
-    //     id: user._id,
-    //     email: user.email,
-    //     firstName: user.firstName,
-    //     lastName: user.lastName,
-    //     role: user.role,
-    //   },
-    // });
-    res.redirect(
-      `${process.env.CLIENT_URL}/login?token=${token}`
-    );
-  } catch (error) {
-    console.error("Google OAuth callback error:", error);
-    res.status(500).json({ success: false, error: "Google login failed" });
-  }
-};
-
 
 // Forgot password - send reset code.
 exports.forgotPassword = async (req, res) => {
@@ -366,7 +279,8 @@ exports.verifyResetCode = async (req, res) => {
     if (user.passwordResetCode !== code) {
       return res.status(401).json({
         success: false,
-        error: "Invalid reset code, please enter the code correct sent to your email",
+        error:
+          "Invalid reset code, please enter the code correct sent to your email",
       });
     }
 
@@ -429,7 +343,6 @@ exports.resetPassword = async (req, res) => {
       return res.status(404).json({
         success: false,
         error: `User with ${email} not found`,
-
       });
     }
 
@@ -437,7 +350,8 @@ exports.resetPassword = async (req, res) => {
     if (user.passwordResetCode !== code) {
       return res.status(401).json({
         success: false,
-        error: "Invalid reset code, please enter the code correct sent to your email",
+        error:
+          "Invalid reset code, please enter the code correct sent to your email",
       });
     }
 

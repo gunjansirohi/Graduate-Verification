@@ -1,57 +1,55 @@
-const express = require('express'); 
-const { googleOAuthCallback, register, verifyEmail, login, verifyLogin, forgotPassword, verifyResetCode, resetPassword } =  require('../controllers/authController.js');
-const { authenticateUser, authenticateRegistrar } = require('../middleware/authMiddleware');
-const User = require('../models/User');
-const Admin = require('../models/Admin');
+const express = require("express");
+const {
+  googleOAuthCallback,
+  register,
+  login,
+  verifyLogin,
+  forgotPassword,
+  verifyResetCode,
+  resetPassword,
+} = require("../controllers/authController.js");
+const {
+  authenticateUser,
+  authenticateRegistrar,
+} = require("../middleware/authMiddleware");
+const User = require("../models/User");
+const Admin = require("../models/Admin");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const passport = require('../utils/passport.js'); // Ensure this path is correct
-const { updateProfile, upload } = require('../controllers/registrarController.js');
+const bcrypt = require("bcrypt");
+const passport = require("../utils/passport.js"); // Ensure this path is correct
+const {
+  updateProfile,
+  upload,
+} = require("../controllers/registrarController.js");
 
 // POST /api/auth/register
-router.post('/register', register);
-
-// POST /api/auth/verify-email
-router.post('/verify-email', verifyEmail);
+router.post("/register", register);
 
 // Login routes
 router.post("/login", login);
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-// Google OAuth callback route
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login", session: false }),
-  googleOAuthCallback
-);
 
 // Password reset routes
 router.post("/forgot-password", forgotPassword);
 router.post("/verify-reset-code", verifyResetCode);
 router.post("/reset-password", resetPassword);
 
-
-
-router.get('/me', authenticateUser, async (req, res) => {
+router.get("/me", authenticateUser, async (req, res) => {
   try {
     let user;
-    
-    if (req.user.modelType === 'Admin') {
-      user = await Admin.findById(req.user._id).select('-password');
+
+    if (req.user.modelType === "Admin") {
+      user = await Admin.findById(req.user._id).select("-password");
     } else {
-      user = await User.findById(req.user._id).select('-password');
+      user = await User.findById(req.user._id).select("-password");
     }
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     res.json({
       ...user.toObject(),
-      modelType: req.user.modelType
+      modelType: req.user.modelType,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -59,14 +57,14 @@ router.get('/me', authenticateUser, async (req, res) => {
 });
 
 // In your password update endpoint
-router.put('/settings/password', authenticateUser, async (req, res) => {
+router.put("/settings/password", authenticateUser, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   // 1. Validate input
   if (!currentPassword || !newPassword) {
     return res.status(400).json({
       success: false,
-      message: 'Both current and new passwords are required.'
+      message: "Both current and new passwords are required.",
     });
   }
 
@@ -75,7 +73,8 @@ router.put('/settings/password', authenticateUser, async (req, res) => {
   if (!passwordRegex.test(newPassword)) {
     return res.status(400).json({
       success: false,
-      message: 'Password must include uppercase, lowercase, numbers, and be at least 8 characters long.'
+      message:
+        "Password must include uppercase, lowercase, numbers, and be at least 8 characters long.",
     });
   }
 
@@ -83,11 +82,14 @@ router.put('/settings/password', authenticateUser, async (req, res) => {
     const user = req.user; // ✅ Fix here
 
     // 3. Verify current password
-    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    const isCurrentPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
     if (!isCurrentPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'Current password is incorrect.'
+        message: "Current password is incorrect.",
       });
     }
 
@@ -96,7 +98,7 @@ router.put('/settings/password', authenticateUser, async (req, res) => {
     if (isSamePassword) {
       return res.status(400).json({
         success: false,
-        message: 'New password cannot be the same as the current password.'
+        message: "New password cannot be the same as the current password.",
       });
     }
 
@@ -111,28 +113,17 @@ router.put('/settings/password', authenticateUser, async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Password updated successfully.'
+      message: "Password updated successfully.",
     });
-
   } catch (error) {
-    console.error('Password update error:', error.message);
+    console.error("Password update error:", error.message);
     res.status(500).json({
       success: false,
-      message: 'Internal server error. Please try again later.'
+      message: "Internal server error. Please try again later.",
     });
   }
 });
 
-
-
-router.put(
-  '/profile',
-  authenticateUser,
-  upload.single('photo'),
-  updateProfile
-);
-
-
-
+router.put("/profile", authenticateUser, upload.single("photo"), updateProfile);
 
 module.exports = router;
