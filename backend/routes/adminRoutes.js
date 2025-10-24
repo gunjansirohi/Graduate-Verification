@@ -25,11 +25,13 @@ const {
   updateExternalUser,
   deleteExternalUser,
   loginLimiter,
+  createInitialAdmin,
 } = require("../controllers/adminController");
 
 const router = express.Router();
 
 router.post("/login", loginLimiter, loginAdmin);
+router.post("/create-initial-admin", createInitialAdmin);
 router.get("/logout", logoutAdmin);
 
 router.get(
@@ -44,12 +46,14 @@ router.post(
   roleMiddleware(["admin"]),
   createUserByAdmin
 );
-router.put('/editUser/:id', 
- upload.single('photo'),
+router.put(
+  "/editUser/:id",
+  upload.single("photo"),
   authenticateUser,
   roleMiddleware(["admin"]),
 
-    editUserAccount);
+  editUserAccount
+);
 router.delete(
   "/deleteUser/:userId",
   authenticateUser,
@@ -77,9 +81,24 @@ router.get(
   roleMiddleware(["admin", "registrar"]),
   getAllCertificates
 );
-router.get("/externalUsers", authenticateUser, roleMiddleware(["admin", "registrar"]), getAllUsers);
-router.put("/externalUsers/:id", authenticateUser, roleMiddleware(["admin", "registrar"]), updateExternalUser);
-router.delete("/externalUsers/:id", authenticateUser, roleMiddleware(["admin", "registrar"]), deleteExternalUser);
+router.get(
+  "/externalUsers",
+  authenticateUser,
+  roleMiddleware(["admin", "registrar"]),
+  getAllUsers
+);
+router.put(
+  "/externalUsers/:id",
+  authenticateUser,
+  roleMiddleware(["admin", "registrar"]),
+  updateExternalUser
+);
+router.delete(
+  "/externalUsers/:id",
+  authenticateUser,
+  roleMiddleware(["admin", "registrar"]),
+  deleteExternalUser
+);
 router.get("/notifications", getNotification);
 router.delete("/notifications/:id", deleteNotification);
 router.put("/notifications/:id/read", markNotificationAsRead);
