@@ -1,4 +1,4 @@
-# 🎓Web-Based Graduate Document Credentials Verification System for Bonga University
+# 🎓Web-Based Graduate Document Credentials Verification System for GLA University
 
 A full-stack **web-based graduate verification system with national ID verification** built with the MERN stack. 
 This system allows external users (employers, institutions) to verify the authenticity of graduate certificates, 
@@ -43,7 +43,7 @@ This project is a comprehensive, secure, and user-friendly platform for graduate
 - **Step-by-step Verification:**  
   - Input graduate FAN to fetch and display personal info (read-only).
   - Enter academic details (CGPA, program, program type, graduation year, department).
-  - System searches Bonga University graduate database.
+  - System searches GLA University graduate database.
   - If found, user can view and download their certificate.
   - If not found, user is notified.
 - **Automatic Admin Notification:**  
@@ -152,16 +152,6 @@ This project is a comprehensive, secure, and user-friendly platform for graduate
 ## **frontend**: React-based ExternalUser/registrar/admin dashboard and chat UI  
 ## **backend**: Express.js REST API for user management, authentication, and chat (with Socket.IO)  
 ## **nationalidapi**: Microservice for national ID verification
-
----
-## Landing Page in Dark Theme
-
-![image](https://github.com/user-attachments/assets/777e7c11-5c67-4b6c-9f07-8693b1b3d3d8)
-
----
-## Landing Page in Light Theme
-
-![image](https://github.com/user-attachments/assets/bc829706-f612-48b3-a106-7b134fa82c54)
 
 ---
 ## Project Structure
@@ -381,7 +371,7 @@ After successful signup and login, an external user can:
 ![image](https://github.com/user-attachments/assets/50a93cfe-b3e4-4233-8db6-9ff3efe1dd2b)
 
    - **Step 3:** Search Graduate Record
-     - The system checks the Bonga University graduate database for a matching record.
+     - The system checks the GLA University graduate database for a matching record.
      - **If graduate exists:**
        - The user sees a link to view the full document information.
        - The user can open the link and download their graduation certificate
@@ -517,25 +507,7 @@ npm run dev
 - **Rate limit lockout:** Wait for 1 minute after 5 failed login attempts.
 - **Socket.IO issues:** Make sure the frontend and backend use the same allowed origins and credentials.
 
----
 
-## License
-
-This project is for educational purposes.  
-See [LICENSE](LICENSE) for details.
-
----
-
-## 👨‍💻 Author & Contact
-
-**Developed & Maintained by:**  
-**Madiso Melese**
-
-- 📧 **Email:** [madishamadiso00@gmail.com](mailto:madishamadiso00@gmail.com)
-- 🌐 **LinkedIn:** [linkedin.com/in/madiso-melese](#) <!-- Add your LinkedIn if available -->
-- 🏛️ **Institution:** Bonga University
-
----
 
 > For questions, feedback, or collaboration opportunities,  
 > please feel free to reach out via email.

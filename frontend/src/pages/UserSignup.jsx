@@ -137,9 +137,7 @@ const UserSignup = () => {
   const [step, setStep] = useState(1);
   const [maxStep, setMaxStep] = useState(1); // Track the farthest step reached
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // For positive feedback
   const [loading, setLoading] = useState(false);
-  const [verificationCode, setVerificationCode] = useState("");
   const [strength, setStrength] = useState(0); // Add strength state
   const [formData, setFormData] = useState({
     nationalIdNumber: "",
@@ -211,7 +209,6 @@ const UserSignup = () => {
 
     setLoading(true);
     setError("");
-    setSuccessMessage("");
     try {
       const { data } = await axios.get(`${nationalidurl}/nationalIdNumber`, {
         params: { nationalIdNumber: formData.nationalIdNumber },
@@ -224,7 +221,6 @@ const UserSignup = () => {
           lastName: data.nationalID.lastName,
           gender: data.nationalID.gender,
         }));
-        setSuccessMessage("National ID verified successfully!");
         goToStep(2);
       } else {
         setError(data.error || "National ID not found");
@@ -244,7 +240,6 @@ const UserSignup = () => {
 
     setLoading(true);
     setError("");
-    setSuccessMessage("");
     try {
       const { data } = await axios.get(`${nationalidurl}/nationalIdNumber`, {
         params: {
@@ -256,7 +251,6 @@ const UserSignup = () => {
         },
       });
       if (data.success) {
-        setSuccessMessage("Identity verified successfully!");
         goToStep(3);
       } else {
         setError(data.error || "Identity verification failed");
@@ -281,7 +275,6 @@ const UserSignup = () => {
 
     setLoading(true);
     setError("");
-    setSuccessMessage("");
     try {
       const { data } = await axios.post(`${authurl}/register`, {
         nationalIdNumber: formData.nationalIdNumber,
@@ -294,44 +287,12 @@ const UserSignup = () => {
         password: formData.password,
       });
       if (data.success) {
-        setSuccessMessage(
-          "Registration successful! Please check your email for verification."
-        );
-        goToStep(4);
+        navigate("/externalUser");
       } else {
         setError(data.error || "Registration failed");
       }
     } catch (err) {
       setError(err.response?.data?.error || "Registration error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyEmail = async () => {
-    if (!verificationCode || verificationCode.length !== 6) {
-      setError("Please enter a valid 6-digit code");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-    setSuccessMessage("");
-    try {
-      const { data } = await axios.post(`${authurl}/verify-email`, {
-        email: formData.email,
-        code: verificationCode,
-      });
-      localStorage.setItem("token", data.token);
-
-      if (data.success) {
-        setSuccessMessage("Email verified successfully!");
-        navigate("/externalUser");
-      } else {
-        setError(data.error || "Invalid verification code");
-      }
-    } catch (err) {
-      setError(err.response?.data?.error || "Verification failed");
     } finally {
       setLoading(false);
     }
@@ -349,7 +310,7 @@ const UserSignup = () => {
 
         {/* Progress Steps */}
         <div className="flex justify-between mb-8">
-          {[1, 2, 3, 4].map((stepNumber) => (
+          {[1, 2, 3].map((stepNumber) => (
             <div
               key={stepNumber}
               className={`flex flex-col items-center cursor-pointer ${
@@ -376,7 +337,7 @@ const UserSignup = () => {
                     : "text-gray-500"
                 }`}
               >
-                {["Verify ID", "Confirm", "Account", "Verify"][stepNumber - 1]}
+                {["Verify ID", "Confirm", "Account"][stepNumber - 1]}
               </div>
             </div>
           ))}
@@ -386,13 +347,6 @@ const UserSignup = () => {
         {error && (
           <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded-lg">
             {error}
-          </div>
-        )}
-
-        {/* Success Message */}
-        {successMessage && (
-          <div className="mb-4 p-3 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200 rounded-lg">
-            {successMessage}
           </div>
         )}
 
@@ -562,39 +516,6 @@ const UserSignup = () => {
               className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg disabled:opacity-50 transition"
             >
               {loading ? "Registering..." : "Register"}
-            </button>
-          </div>
-        )}
-
-        {/* Step 4: Verify Email */}
-        {step === 4 && (
-          <div className="space-y-4">
-            <p className="text-gray-600 dark:text-gray-400">
-              We sent a 6-digit verification code to{" "}
-              <span className="font-medium">{formData.email}</span>
-            </p>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Verification Code
-              </label>
-              <input
-                type="text"
-                placeholder="Enter 6-digit code"
-                value={verificationCode}
-                onChange={(e) =>
-                  setVerificationCode(
-                    e.target.value.replace(/\D/g, "").slice(0, 6)
-                  )
-                }
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <button
-              onClick={handleVerifyEmail}
-              disabled={loading}
-              className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg disabled:opacity-50 transition"
-            >
-              {loading ? "Verifying..." : "Verify Email"}
             </button>
           </div>
         )}
