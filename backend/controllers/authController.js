@@ -141,12 +141,12 @@ exports.login = async (req, res) => {
         error: "Email/Nationa ID is required",
       });
     }
-    if (!captchaToken) {
-      return res.status(400).json({
-        success: false,
-        error: "please, idenitify your self you're not robot   it's required",
-      });
-    }
+    // if (!captchaToken) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     error: "please, idenitify your self you're not robot   it's required",
+    //   });
+    // }
 
     if (!password) {
       return res.status(400).json({
@@ -160,10 +160,10 @@ exports.login = async (req, res) => {
         error: "Password must be at least 8 characters long",
       });
     }
-    const isHuman = await validateCaptcha(captchaToken);
-    if (!isHuman) {
-      return res.status(403).json({ message: "CAPTCHA validation failed" });
-    }
+    // const isHuman = await validateCaptcha(captchaToken);
+    // if (!isHuman) {
+    //   return res.status(403).json({ message: "CAPTCHA validation failed" });
+    // }
 
     // Find user by email or national ID
     const user = await User.findOne({
