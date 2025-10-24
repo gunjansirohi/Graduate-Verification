@@ -259,7 +259,6 @@ const UserLogin = ({ setCurrentUser }) => {
             </Link>
           </div>
         </>
-        )}
       </div>
     </div>
   );

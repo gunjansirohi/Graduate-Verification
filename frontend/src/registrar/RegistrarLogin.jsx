@@ -178,7 +178,6 @@ const RegistrarLogin = () => {
             </button>
           </div>
         </>
-        )}
       </div>
     </div>
   );

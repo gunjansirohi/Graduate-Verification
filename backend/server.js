@@ -1,8 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const passport = require("./utils/passport"); 
+const passport = require("./utils/passport");
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
@@ -41,6 +42,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:5173",
       "http://localhost:5174",
+      "http://localhost:5000", // Added for local development
       "http://172.20.144.1:3000",
       "https://GLA-university-graduate-document.onrender.com",
     ],
@@ -49,9 +51,6 @@ app.use(
 );
 app.use(cookieParser());
 app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(helmet()); // Set security headers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -71,6 +70,7 @@ const io = new Server(server, {
       "http://localhost:3000",
       "http://localhost:5173",
       "http://localhost:5174",
+      "http://localhost:5000",
       "http://172.20.144.1:3000",
       "https://GLA-university-graduate-document.onrender.com/",
     ],
