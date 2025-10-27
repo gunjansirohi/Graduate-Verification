@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import AdminSidebar from "./AdminSidebar";
 import ThemeToogler from "./ThemeToogler";
@@ -9,8 +8,8 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import ChatPage from "../chat/ChatPage";
 
-const authurl = import.meta.env.VITE_ADMIN_ROUTE
-const userAuthUrl= import.meta.env.VITE_AUTH_ROUTE
+const authurl = import.meta.env.VITE_ADMIN_ROUTE;
+const userAuthUrl = import.meta.env.VITE_AUTH_ROUTE;
 
 const AdminLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,16 +21,17 @@ const AdminLayout = ({ children }) => {
   const chatRef = useRef();
   const navigate = useNavigate();
 
-
-
-   // Click outside handlers
+  // Click outside handlers
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         setSidebarOpen(false);
       }
-      if (chatRef.current && !chatRef.current.contains(event.target) && 
-          !event.target.closest('.chat-trigger')) {
+      if (
+        chatRef.current &&
+        !chatRef.current.contains(event.target) &&
+        !event.target.closest(".chat-trigger")
+      ) {
         setShowChat(false);
       }
     };
@@ -58,10 +58,10 @@ const AdminLayout = ({ children }) => {
   // Logout
   const handleAdminLogout = async () => {
     try {
-      await axios.get(`${authurl}/logout`, { 
-        withCredentials: true 
+      await axios.get(`${authurl}/logout`, {
+        withCredentials: true,
       });
-          localStorage.removeItem('adminToken');
+      localStorage.removeItem("adminToken");
       setCurrentUser(null); // Clear current user state
       Swal.fire("Success", "🎉 Admin Logout Successful!", "success");
       navigate("/admin/login");
@@ -74,15 +74,15 @@ const AdminLayout = ({ children }) => {
     const fetchCurrentUser = async () => {
       try {
         const res = await axios.get(`${userAuthUrl}/me`, {
-          headers: { 
-            Authorization: `Bearer ${localStorage.getItem('adminToken')}` 
-          }
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
         });
         setCurrentUser(res.data);
       } catch (err) {
-        console.error('Error fetching current user:', err);
+        console.error("Error fetching current user:", err);
         const timer = setTimeout(() => {
-          navigate('/admin/login');
+          navigate("/admin/login");
         }, 2000);
         return () => clearTimeout(timer);
       }
@@ -120,12 +120,12 @@ const AdminLayout = ({ children }) => {
             BUGCVS
           </span>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <ThemeToogler />
           <Notifications />
-          
-          <button 
+
+          <button
             onClick={() => setShowChat(!showChat)}
             className="chat-trigger relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
           >
@@ -138,7 +138,9 @@ const AdminLayout = ({ children }) => {
           </button>
           {
             <div className="hidden md:flex items-center gap-2">
-              <span className="text-gray-700 dark:text-gray-300">{currentUser.firstName}</span>
+              <span className="text-gray-700 dark:text-gray-300">
+                {currentUser.firstName}
+              </span>
               <img
                 src={currentUser.photo || "/default-avatar.png"}
                 alt="Profile"
@@ -146,7 +148,7 @@ const AdminLayout = ({ children }) => {
               />
             </div>
           }
-          
+
           <button
             onClick={handleAdminLogout}
             className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-sm"
@@ -167,8 +169,11 @@ const AdminLayout = ({ children }) => {
       </div>
 
       {/* Main Content */}
-      <main 
-      className={`pt-16 md:ml-64 transition-all duration-300 ${sidebarOpen ? 'blur-sm' : ''}`}>
+      <main
+        className={`pt-16 md:ml-64 transition-all duration-300 ${
+          sidebarOpen ? "blur-sm" : ""
+        }`}
+      >
         {children}
       </main>
 
@@ -195,8 +200,12 @@ const AdminLayout = ({ children }) => {
               </button>
             </div>
           </div>
-          
-          <div className={`flex-1 overflow-hidden transition-all duration-300 ${chatMinimized ? 'h-0' : 'h-full'}`}>
+
+          <div
+            className={`flex-1 overflow-hidden transition-all duration-300 ${
+              chatMinimized ? "h-0" : "h-full"
+            }`}
+          >
             <ChatPage currentUser={currentUser} />
           </div>
         </div>

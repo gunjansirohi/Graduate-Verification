@@ -300,8 +300,8 @@ const LandingPage = ({ children }) => {
             Verify Graduate Credentials Instantly
           </h1>
           <p className="text-xl mb-8">
-            GLA University's secure digital platform for authenticating
-            academic documents. Trusted by employers nationwide.
+            GLA University's secure digital platform for authenticating academic
+            documents. Trusted by employers nationwide.
           </p>
           <Link
             to="/login"
@@ -427,97 +427,125 @@ const LandingPage = ({ children }) => {
       {/* Main Content */}
       <FAQSection />
       {/* Footer */}
-<footer className="bg-gray-800 dark:bg-gray-950 text-white py-8 px-6">
-  <div className="max-w-7xl mx-auto">
-    {/* Map Section - Now at the top */}
-    <div className="w-full h-64 md:h-80 lg:h-96 mb-8 rounded-xl overflow-hidden shadow-lg">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.467074564943!2d36.2287733736355!3d7.301304592706398!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x17aea2c28ab0b28d%3A0xb37eb860542e5c8a!2sGLA%20University!5e0!3m2!1sen!2set!4v1750451066930!5m2!1sen!2set"
-        width="100%"
-        height="100%"
-        style={{ border: 0 }}
-        allowFullScreen=""
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        title="GLA University Location"
-        className="w-full h-full"
-      ></iframe>
-    </div>
+      <footer className="bg-gray-800 dark:bg-gray-950 text-white py-8 px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Map Section - Now at the top */}
+          <div
+            className="mapouter"
+            style={{
+              position: "relative",
+              textAlign: "right",
+              width: "100%",
+              height: "450px",
+            }}
+          >
+            <div
+              className="gmap_canvas"
+              style={{
+                overflow: "hidden",
+                background: "none!important",
+                width: "100%",
+                height: "450px",
+              }}
+            >
+              <iframe
+                width="100%"
+                height="450px"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed/v1/place?q=gla%20university&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
+              ></iframe>
+            </div>
+            <a
+              href="https://norsumediagroup.com/embed-google-map-website-free"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gme-generated-link"
+            >
+              Embed Map on Website for Free
+            </a>
+            <style>
+              {`.mapouter{position:relative;text-align:right;} .gmap_canvas{overflow:hidden;background:none!important;} .gmap_canvas iframe{width:100%;height:100%;} .mapouter a{display:block;font-size:0.85em;text-align:center;padding:5px 0;color:#6c757d;text-decoration:none;} .gme-generated-link{display:none!important;}`}
+            </style>
+          </div>
 
-    {/* Content Sections Below Map */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div>
-        <h3 className="text-xl font-bold mb-4">GLA University</h3>
-        <p className="mb-2">P.O. Box: 334, GLA, Ethiopia</p>
-        <p className="mb-2">Email: info@GLAu.edu.et</p>
-        <p>Phone: +251 XX XXX XXXX</p>
-      </div>
-      
-      <div>
-        <h3 className="text-xl font-bold mb-4">Quick Links</h3>
-        <ul className="space-y-2">
-          <li>
-            <Link to="/" className="hover:text-blue-400">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/login" className="hover:text-blue-400">
-              Verify Documents
-            </Link>
-          </li>
-          <li>
-            <Link to="/about" className="hover:text-blue-400">
-              About Us
-            </Link>
-          </li>
-          <li>
-            <Link to="/contact" className="hover:text-blue-400">
-              Contact
-            </Link>
-          </li>
-        </ul>
-      </div>
-      
-      <div>
-        <h3 className="text-xl font-bold mb-4">Connect With Us</h3>
-        <div className="flex space-x-4 justify-start">
-          <a
-            href="https://facebook.com/GLAu"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-blue-400 transition-colors"
-          >
-            <FaFacebook size={24} />
-          </a>
-          <a
-            href="https://twitter.com/GLAu"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-blue-400 transition-colors"
-          >
-            <FaTwitter size={24} />
-          </a>
-          <a
-            href="https://linkedin.com/school/GLA-university"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-blue-400 transition-colors"
-          >
-            <FaLinkedin size={24} />
-          </a>
+          {/* Content Sections Below Map */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">GLA University</h3>
+              <p className="mb-2">P.O. Box: 334, GLA, Ethiopia</p>
+              <p className="mb-2">Email: info@GLAu.edu.et</p>
+              <p>Phone: +251 XX XXX XXXX</p>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/" className="hover:text-blue-400">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/login" className="hover:text-blue-400">
+                    Verify Documents
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="hover:text-blue-400">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="hover:text-blue-400">
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold mb-4">Connect With Us</h3>
+              <div className="flex space-x-4 justify-start">
+                <a
+                  href="https://facebook.com/GLAu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  <FaFacebook size={24} />
+                </a>
+                <a
+                  href="https://twitter.com/GLAu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  <FaTwitter size={24} />
+                </a>
+                <a
+                  href="https://linkedin.com/school/GLA-university"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  <FaLinkedin size={24} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Copyright Section */}
+          <div className="max-w-7xl mx-auto mt-8 pt-4 border-t border-gray-700 text-center">
+            <p>
+              &copy; {new Date().getFullYear()} GLA University. All rights
+              reserved.
+            </p>
+          </div>
         </div>
-      </div>
-    </div>
-
-    {/* Copyright Section */}
-    <div className="max-w-7xl mx-auto mt-8 pt-4 border-t border-gray-700 text-center">
-      <p>
-        &copy; {new Date().getFullYear()} GLA University. All rights reserved.
-      </p>
-    </div>
-  </div>
-</footer>
+      </footer>
     </div>
   );
 };
