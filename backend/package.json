@@ -13,6 +13,7 @@
     "data": "node data/admin.data.js"
   },
   "dependencies": {
+    "@prisma/client": "^6.18.0",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^2.2.0",
@@ -37,11 +38,13 @@
     "qrcode": "^1.5.4",
     "sharp": "^0.34.2",
     "socket.io": "^4.8.1",
+    "sqlite3": "^5.1.7",
     "twilio": "^5.6.0",
     "uuid": "^11.1.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "nodemon": "^3.0.0",
+    "prisma": "^6.18.0"
   }
 }
