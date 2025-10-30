@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FiSun, FiMoon, FiMenu, FiX, FiArrowRight } from "react-icons/fi";
 import {
@@ -40,6 +40,23 @@ const Mortarboard = () => (
 const LandingPage = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
+  const signupCloseTimer = useRef(null);
+
+  const openSignup = () => {
+    if (signupCloseTimer.current) {
+      clearTimeout(signupCloseTimer.current);
+      signupCloseTimer.current = null;
+    }
+    setSignupOpen(true);
+  };
+
+  const scheduleSignupClose = () => {
+    if (signupCloseTimer.current) clearTimeout(signupCloseTimer.current);
+    signupCloseTimer.current = setTimeout(() => {
+      setSignupOpen(false);
+    }, 700);
+  };
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -78,22 +95,28 @@ const LandingPage = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-yellow-100 transition-colors duration-300">
-      {/* Header (prompt-style) */}
+    <div className="min-h-screen flex flex-col bg-gray-50 transition-colors duration-300">
       <header className="px-6 mt-2">
         <div className="navbar">
-          <div className="brand">Your Logo</div>
+          <div className="brand">GLAU </div>
           <nav className="nav-links">
             <Link to="/">Home</Link>
             <Link to="/about">About</Link>
             <Link to="/login">Verify</Link>
             <Link to="/login">Live Chat</Link>
           </nav>
-          <Link to="/signup" className="btn btn-primary">Sign up</Link>
+          <div className={`dropdown ${signupOpen ? "open" : ""}`} onMouseEnter={openSignup} onMouseLeave={scheduleSignupClose}>
+            <Link to="/signup" className="btn btn-primary">Sign up</Link>
+            <div className="dropdown-menu" onMouseEnter={openSignup} onMouseLeave={scheduleSignupClose}>
+              <Link to="/admin/login" className="dropdown-item" onClick={() => setSignupOpen(false)}>Admin</Link>
+              <Link to="/registrar/login" className="dropdown-item" onClick={() => setSignupOpen(false)}>Registrar</Link>
+              <Link to="/signup" className="dropdown-item" onClick={() => setSignupOpen(false)}>User</Link>
+            </div>
+          </div>
         </div>
       </header>
 
-      <main className="flex-grow px-6 max-w-7xl mx-auto w-full">{children}</main>
+      <main className="flex-grow px-6 pt-5 max-w-7xl mx-auto w-full">{children}</main>
 
       
       <section className="px-6 pb-5">
@@ -131,21 +154,22 @@ const LandingPage = ({ children }) => {
       </section>
 
       {/* System Description */}
-      <section className="py-16 px-6 bg-white dark:bg-gray-800">
+      <section className="py-16 bg-yellow px-6 pb-5">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
             How Our System Works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Step 1 - Login/Signup */}
-            <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-md text-center">
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md text-center">
+
               <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 1
               </div>
-              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+              <h3 className="text-xl font-bold mb-2 text-gray-900">
                 Login/Signup
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-gray-600">
                 Create an account or login to access the verification system.
               </p>
               <div className="mt-4 flex justify-center space-x-3">
@@ -157,7 +181,7 @@ const LandingPage = ({ children }) => {
                 </Link>
                 <Link
                   to="/signup"
-                  className="text-sm bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white py-2 px-4 rounded-lg"
+                  className="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg"
                 >
                   Sign Up
                 </Link>
@@ -165,40 +189,40 @@ const LandingPage = ({ children }) => {
             </div>
 
             {/* Step 2 - Submit Document */}
-            <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-md text-center">
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md text-center">
               <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 2
               </div>
-              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+              <h3 className="text-xl font-bold mb-2 text-gray-900">
                 Submit Document
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-gray-600">
                 Enter the graduate's details to initiate verification.
               </p>
             </div>
 
             {/* Step 3 - Instant Verification */}
-            <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-md text-center">
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md text-center">
               <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 3
               </div>
-              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+              <h3 className="text-xl font-bold mb-2 text-gray-900">
                 Instant Verification
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-gray-600">
                 Our system cross-checks with GLA University's secure database.
               </p>
             </div>
 
             {/* Step 4 - Get Results */}
-            <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-md text-center">
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md text-center">
               <div className="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 4
               </div>
-              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+              <h3 className="text-xl font-bold mb-2 text-gray-900">
                 Get Results
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-gray-600">
                 Receive a digitally signed report within seconds.
               </p>
             </div>
@@ -207,9 +231,9 @@ const LandingPage = ({ children }) => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 px-6 bg-gray-100 dark:bg-gray-700">
+      <section className="py-16 px-6 bg-gray-100">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
             Who's Happy With Our System
           </h2>
           <div className="relative h-64 overflow-hidden">
@@ -219,9 +243,9 @@ const LandingPage = ({ children }) => {
             >
               {testimonials.map((testimonial) => (
                 <div key={testimonial.id} className="min-w-full px-4">
-                  <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+                  <div className="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
                     <FaQuoteLeft className="text-blue-600 text-3xl mb-4" />
-                    <p className="text-gray-700 dark:text-gray-300 text-lg italic">
+                    <p className="text-gray-700 text-lg italic">
                       {testimonial.quote}
                     </p>
                     <div className="flex items-center mt-6">
@@ -230,7 +254,7 @@ const LandingPage = ({ children }) => {
                         alt={testimonial.company}
                         className="h-12 mr-4"
                       />
-                      <span className="font-bold dark:text-white">
+                      <span className="font-bold">
                         {testimonial.company}
                       </span>
                     </div>
@@ -245,7 +269,7 @@ const LandingPage = ({ children }) => {
       {/* Main Content */}
       <FAQSection />
       {/* Footer */}
-      <footer className="bg-gray-800 dark:bg-gray-950 text-white py-8 px-6">
+      <footer className="bg-gray-100 text-gray-800 py-8 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Map Section - Now at the top */}
           <div
@@ -356,7 +380,7 @@ const LandingPage = ({ children }) => {
           </div>
 
           {/* Copyright Section */}
-          <div className="max-w-7xl mx-auto mt-8 pt-4 border-t border-gray-700 text-center">
+          <div className="max-w-7xl mx-auto mt-8 pt-4 border-t border-gray-300 text-center">
             <p>
               &copy; {new Date().getFullYear()} GLA University. All rights
               reserved.
